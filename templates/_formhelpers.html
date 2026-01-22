@@ -1,0 +1,39 @@
+{% macro render_form(form, action="", method="post", submit_text="Submit") %}
+<form action="{{ action }}" method="{{ method }}" novalidate>
+
+  {{ form.hidden_tag() }}
+
+  {% for field in form %}
+    {% if field.type not in ["CSRFTokenField", "SubmitField"] %}
+
+      <div class="mb-3">
+        {{ field.label(class="form-label") }}
+
+        {# CKEditor field #}
+        {% if field.type == "CKEditorField" %}
+          {{ field() }}
+
+        {# Normal fields #}
+        {% else %}
+          {% if field.errors %}
+            {{ field(class="form-control is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in field.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ field(class="form-control") }}
+          {% endif %}
+        {% endif %}
+      </div>
+
+    {% endif %}
+  {% endfor %}
+
+  <button type="submit" class="btn btn-primary">
+    {{ submit_text }}
+  </button>
+
+</form>
+{% endmacro %}
