@@ -134,8 +134,3 @@ http://127.0.0.1:5000
 BTech student interested in **backend development, APIs, and AI systems**.
 
 ---
-
-
-## 📄 License
-
-This project is open source and available under the MIT License.
