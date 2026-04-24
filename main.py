@@ -1,6 +1,6 @@
 from datetime import date
 from flask import Flask, abort, render_template, redirect, url_for, flash
-
+import os
 from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user , login_required
 from flask_sqlalchemy import SQLAlchemy
@@ -8,15 +8,20 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
 
 from forms import CreatePostForm , RegisterForm , LoginForm , CommentForm
 import hashlib
-
+load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 ckeditor = CKEditor(app)
 
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "connect_args": {"sslmode": "require"}
+}
 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -29,7 +34,7 @@ def load_user(user_id):
 
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
