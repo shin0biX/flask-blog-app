@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-# Import your forms from the forms.py
+
 from forms import CreatePostForm , RegisterForm , LoginForm , CommentForm
 import hashlib
 
@@ -17,7 +17,7 @@ app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 ckeditor = CKEditor(app)
 
 
-# TODO: Configure Flask-Login
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -26,7 +26,7 @@ def load_user(user_id):
     return db.session.get(User, int(user_id))
 
 
-# CREATE DATABASE
+
 class Base(DeclarativeBase):
     pass
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
@@ -38,7 +38,7 @@ def gravatar_url(email, size=100):
     hash_ = hashlib.md5(email).hexdigest()
     return f"https://www.gravatar.com/avatar/{hash_}?s={size}&d=identicon"
 
-# CONFIGURE TABLES
+
 class BlogPost(db.Model):
     __tablename__ = "blog_posts"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -52,7 +52,7 @@ class BlogPost(db.Model):
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
     comments = relationship("Comment" , back_populates="parent_post")
 
-# TODO: Create a User table for all your registered users. 
+
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -77,7 +77,7 @@ with app.app_context():
 
 
 
-# TODO: Use Werkzeug to hash the user's password when creating a new user.
+
 @app.route('/register' , methods =["GET", "POST"])
 def register():
     form = RegisterForm()
@@ -105,7 +105,6 @@ def register():
     return render_template("register.html" , form=form)
 
 
-# TODO: Retrieve a user from the database based on their email. 
 @app.route('/login' , methods = ["GET" , "POST"])
 def login():
     form = LoginForm()
